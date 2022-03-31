@@ -9,14 +9,13 @@ const fps = 60
 const Canvasx = canvas.width
 const Canvasy = canvas.height
 const url = 'https://agarripoff-1.mastersun81.repl.co/score'
+const name = prompt(`What's your name?`)
 
 var highestScore = 0
 var scale = 1
 var text = ''
 var mousex = Canvasx / 2
 var mousey = Canvasy / 2
-
-
 
 body.addEventListener("mousemove", function(event) {
   myFunction(event)
@@ -36,6 +35,16 @@ async function createLeaderboard(){
       if(temp < obj.score) temp = obj.score
     })
     highestScore = temp
+  } catch (e) {
+    console.log(e)
+  }
+  
+}
+
+async function submit(name, score){
+  try {
+    let tempUrl = url + '?name=' + name + '&score=' + score
+    let response = await fetch(tempUrl)
   } catch (e) {
     console.log(e)
   }
@@ -118,6 +127,8 @@ class mainBlob extends Blob {
   increaseSize() {
     this.mass += 1
     scale = (scale / 100) * 99
+    createLeaderboard()
+    submit(name, this.mass)
   }
 }
 
@@ -129,7 +140,6 @@ for (let x = 0; x < 10000; x++) {
 }
 
 function main() {
-  createLeaderboard()
   context.clearRect(0, 0, canvas.width, canvas.height)
   arrayOfFood.forEach(x => {
     x.movement()
